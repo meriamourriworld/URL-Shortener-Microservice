@@ -41,7 +41,6 @@ app.post("/api/shorturl", validateUrlFormat,  (req, res)=>
       const foundUrl = await Url.findOne({url: url});
       if(!foundUrl)
       {
-        console.log(counter)
         counter+=1;
         const newUrl = new Url({url:url, shortener:counter});
         await newUrl.save();
@@ -56,7 +55,10 @@ app.get("/api/shorturl/:shortener", async(req,res)=>
 {
   const { shortener } = req.params;
   const foundUrl = await Url.findOne({shortener : shortener});
-  if()
+  if(foundUrl)
+  {
+    res.redirect(foundUrl.url);
+  }
 })
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
