@@ -1,12 +1,11 @@
 
 
-const validateUrl = (req, res, next)=>
+const validateUrl = async (req, res, next)=>
     {
         try {
-            const parsedUrl = new URL(req.body.url);
-            return parsedUrl;
+            const parsedUrl =  new URL(req.body.url);
         } catch (error) {
-                res.send({ error: 'invalid url' });
+                return res.send({ error: 'invalid url' });
         }
         next();
     }

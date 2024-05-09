@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const url = require("url");
 const {validateUrl} = require("./middlewares/middleware");
 const app = express();
 
@@ -24,6 +23,8 @@ app.get('/api/hello', function(req, res) {
 
 app.post("/api/shorturl", validateUrl, (req, res)=>
 {
+  const {url} = req.body;
+  console.log(url);
 });
 
 app.listen(port, function() {
