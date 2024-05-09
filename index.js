@@ -29,18 +29,35 @@ app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.post("/api/shorturl", validateUrlFormat, (req, res)=>
+app.post("/api/shorturl", validateUrlFormat,  (req, res)=>
 {
-  dns.lookup(req.body.hostname, (error, adr, family)=>
+  const {url} = req.body;
+  dns.lookup(req.body.hostname,async (error, adr, family)=>
   {
-    if(error){res.send({ error: 'invalid url dns'+ error });}
+    if(error){res.send({ error: 'invalid url dns'});}
     else
     {
-      
+      let counter = await Url.countDocuments();
+      const foundUrl = await Url.findOne({url: url});
+      if(!foundUrl)
+      {
+        console.log(counter)
+        counter+=1;
+        const newUrl = new Url({url:url, shortener:counter});
+        await newUrl.save();
+        res.json({ "original_url" : url , "short_url" : counter});
+      }
     }
   })
 });
 
+
+app.get("/api/shorturl/:shortener", async(req,res)=>
+{
+  const { shortener } = req.params;
+  const foundUrl = await Url.findOne({shortener : shortener});
+  if()
+})
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
